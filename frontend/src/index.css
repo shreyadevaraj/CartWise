@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+@theme {
+  --color-peach-50: #fff4eb;
+  --color-peach-100: #ffdcc2;
+  --color-peach-200: #ffbf99;
+  --color-peach-300: #ff9666;
+  --color-peach-400: #ff7033;
+  --color-peach-500: #ff540a;
+  --color-peach-600: #e64a00;
+
+  --color-mint-50: #e0fbf4;
+  --color-mint-100: #bcf6e6;
+  --color-mint-200: #87eed0;
+  --color-mint-300: #4fdbb6;
+  --color-mint-400: #21cfa5;
+  --color-mint-500: #0ca881;
+
+  --color-lavender-50: #f2f0ff;
+  --color-lavender-100: #e0dbfe;
+  --color-lavender-200: #c6bdfc;
+  --color-lavender-300: #a795fa;
+  --color-lavender-400: #8b6ff5;
+  --color-lavender-500: #724cf0;
+
+  --color-sky-50: #e6f6ff;
+  --color-sky-100: #ccebff;
+  --color-sky-200: #99d6ff;
+  --color-sky-300: #66c2ff;
+  --color-sky-400: #33adff;
+  --color-sky-500: #0099ff;
+
+  --color-lemon-50: #fffee0;
+  --color-lemon-100: #fffab8;
+  --color-lemon-200: #fff58f;
+  --color-lemon-300: #ffeb66;
+  --color-lemon-400: #ffe03d;
+  --color-lemon-500: #ffcc00;
+
+  --font-inter: "Inter", system-ui, sans-serif;
+
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+}
+
+body {
+  font-family: var(--font-inter);
+  background-color: #ffffff;
+  margin: 0;
+  color: #1f2937;
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.2s ease-in-out 0s 2;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
