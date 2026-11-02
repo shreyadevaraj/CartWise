@@ -6,7 +6,6 @@ import com.cartwise.service.SeleniumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -45,20 +44,37 @@ public abstract class SeleniumBaseScraper implements PlatformClient {
 
                 double total = 0;
                 boolean anyFound = false;
-                List<String> foundItems = new ArrayList<>();
+                List<PlatformResult.ItemResult> results = new ArrayList<>();
 
                 for (SearchItem item : items) {
                     try {
                         log.info("[{}] Searching for {}", getPlatformName(), item.getItemName());
                         double price = extractPrice(driver, wait, item);
+                        int count = parseQuantity(item.getQuantity());
                         if (price > 0) {
-                            total += price;
+                            total += price * count;
                             anyFound = true;
-                            foundItems.add(item.getItemName());
+                            results.add(PlatformResult.ItemResult.builder()
+                                    .originalName(item.getItemName())
+                                    .matchedName(item.getItemName())
+                                    .price(price * count)
+                                    .quantity(String.valueOf(count))
+                                    .inStock(true)
+                                    .build());
+                        } else {
+                            results.add(PlatformResult.ItemResult.builder()
+                                    .originalName(item.getItemName())
+                                    .quantity(String.valueOf(count))
+                                    .inStock(false)
+                                    .build());
                         }
                     } catch (Exception e) {
                         log.warn("[{}] Failed to extract price for {}: {}", getPlatformName(), item.getItemName(),
                                 e.getMessage());
+                        results.add(PlatformResult.ItemResult.builder()
+                                .originalName(item.getItemName())
+                                .inStock(false)
+                                .build());
                     }
                 }
 
@@ -66,6 +82,7 @@ public abstract class SeleniumBaseScraper implements PlatformClient {
                         .platformName(getPlatformName())
                         .totalAmount(total)
                         .available(anyFound)
+                        .items(results)
                         .deliveryFee(0.0) // Placeholder
                         .build();
 
@@ -82,6 +99,14 @@ public abstract class SeleniumBaseScraper implements PlatformClient {
                 }
             }
         });
+    }
+
+    private int parseQuantity(String quantity) {
+        try {
+            return Math.max(1, Integer.parseInt(quantity));
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 
     protected void safeClick(WebDriver driver, By locator) {
